@@ -1,6 +1,7 @@
 package com.luopeng.week6homework_lp;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -78,11 +79,20 @@ public class MainActivity extends AppCompatActivity {
                 String nickname = currentVebItem.getNickname();
 
                 //存进数据库
-                db.execSQL("insert into tb_collection(id,title,source,description,wap_thumb,create_time,nickname) " +
-                        "values('"+id+"','"+title+"'," +
-                        "'"+source+"','"+description+"','"+wap_thumb+"'," +
-                        "'"+create_time+"','"+nickname+"');");
-                Toast.makeText(MainActivity.this, "保存条目进收藏", Toast.LENGTH_SHORT).show();
+                Cursor cursor = db.query("tb_collection", null, "id='" + id + "'", null, null, null, null);
+                int count = cursor.getCount();
+                if (count!=0) {
+                    Toast.makeText(MainActivity.this, "已收藏", Toast.LENGTH_SHORT).show();
+                }else {
+                    db.execSQL("insert into tb_collection(id,title,source,description,wap_thumb,create_time,nickname) " +
+                            "values('"+id+"','"+title+"'," +
+                            "'"+source+"','"+description+"','"+wap_thumb+"'," +
+                            "'"+create_time+"','"+nickname+"');");
+
+
+                    Toast.makeText(MainActivity.this, "保存条目进收藏", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
         getSupportFragmentManager()

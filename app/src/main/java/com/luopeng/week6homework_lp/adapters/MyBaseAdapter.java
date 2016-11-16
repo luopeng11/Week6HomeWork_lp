@@ -14,8 +14,12 @@ import android.widget.TextView;
 
 import com.luopeng.week6homework_lp.R;
 import com.luopeng.week6homework_lp.beans.News;
+import com.luopeng.week6homework_lp.cache.MyLruCache;
 import com.luopeng.week6homework_lp.utils.HttpsUtils;
+import com.luopeng.week6homework_lp.utils.NetWorkUtils;
+import com.luopeng.week6homework_lp.utils.SdCardUtils;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -24,9 +28,12 @@ import java.util.List;
 public class MyBaseAdapter extends BaseAdapter {
     private List<News.DataBean> data;
     private Context context;
+    private MyLruCache mLruCache;
     public MyBaseAdapter(List<News.DataBean> data, Context context) {
         this.data=data;
         this.context=context;
+        int maxsize= (int) (Runtime.getRuntime().maxMemory()/16);
+        mLruCache = new MyLruCache(maxsize);
     }
 
     @Override
@@ -78,28 +85,53 @@ public class MyBaseAdapter extends BaseAdapter {
         if (path.length()>1){
             final ViewHolder finalHolder = holder;
             final int currentPosition=position;
-            HttpsUtils.loadBytes(path,position,new Handler(){
-                @Override
-                public void handleMessage(Message msg) {
-                    super.handleMessage(msg);
-                    switch (msg.what){
-                        case 110:
-                            int arg1 = msg.arg1;
-                            byte[]bytes= (byte[]) msg.obj;
-                            if (bytes != null) {
-                                if (arg1==currentPosition){
-                                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                    finalHolder.wap_thumb.setImageBitmap(bitmap);
-                                }
+
+            Bitmap bitmap = loadImage(path);//从一二级缓存获取数据
+
+            if (bitmap != null) {
+                finalHolder.wap_thumb.setImageBitmap(bitmap);
+            }else {//有网络下载  无网络不设置
+                if (NetWorkUtils.isConnected(context)){
+                    HttpsUtils.loadBytes(context,path,position,new Handler(){
+                        @Override
+                        public void handleMessage(Message msg) {
+                            super.handleMessage(msg);
+                            switch (msg.what){
+                                case 110:
+                                    int arg1 = msg.arg1;
+                                    byte[]bytes= (byte[]) msg.obj;
+                                    if (bytes != null) {
+                                        if (arg1==currentPosition){
+                                            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                            finalHolder.wap_thumb.setImageBitmap(bitmap);
+                                        }
+                                    }
                             }
-                    }
+                        }
+                    });
                 }
-            });
-        }else {
-//            holder.wap_thumb.setVisibility(ImageView.GONE);
+            }
         }
         return ret;
     }
+
+    private Bitmap loadImage(String path) {
+        String[] split1 = path.split("/");
+        String fileName=split1[split1.length-1];
+        Bitmap bitmap = mLruCache.get(fileName);
+
+        if (bitmap==null){//一级缓存没有，二级缓存取
+            byte[] data1 = SdCardUtils.getData(context.getExternalCacheDir().getAbsolutePath() +
+                    File.separator + fileName);
+            if (data1 != null) {//二级缓存取到数据--存进一级缓存
+                bitmap = BitmapFactory.decodeByteArray(data1, 0, data1.length);
+
+                mLruCache.put(fileName,bitmap);
+            }
+        }
+        return bitmap;
+    }
+
     public void remove(int position){
         if (position<data.size()){
             data.remove(position);

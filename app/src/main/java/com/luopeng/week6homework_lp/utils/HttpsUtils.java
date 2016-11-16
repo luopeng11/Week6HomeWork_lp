@@ -47,7 +47,7 @@ public class HttpsUtils {
             }
         }).start();
     }
-    public static void loadBytes(final String path, final int position, final Handler handler) {
+    public static void loadBytes(final Context context, final String path, final int position, final Handler handler) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -60,6 +60,12 @@ public class HttpsUtils {
                     Response response = client.newCall(request).execute();
                     if (response.isSuccessful()){
                         byte[] bytes = response.body().bytes();
+                        //保存到sd卡
+                        String[] strings = path.split("/");
+                        SdCardUtils.saveToCache(context.getExternalCacheDir().getAbsolutePath(),
+                                strings[strings.length-1],
+                                bytes);
+
                         Message msg=new Message();
                         msg.what=110;
                         msg.arg1=position;
