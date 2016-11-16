@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "D:\\android-studioWorkspace\\Week6HomeWork_lp\\pulltorefresh\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xhdpi-v4\\default_ptr_rotate.png",
+        "source": "D:\\android-studioWorkspace\\Week6HomeWork_lp\\pulltorefresh\\build\\intermediates\\bundles\\debug\\res\\drawable-xhdpi-v4\\default_ptr_rotate.png"
+    },
+    {
+        "merged": "D:\\android-studioWorkspace\\Week6HomeWork_lp\\pulltorefresh\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xhdpi-v4\\indicator_arrow.png",
+        "source": "D:\\android-studioWorkspace\\Week6HomeWork_lp\\pulltorefresh\\build\\intermediates\\bundles\\debug\\res\\drawable-xhdpi-v4\\indicator_arrow.png"
+    },
+    {
+        "merged": "D:\\android-studioWorkspace\\Week6HomeWork_lp\\pulltorefresh\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xhdpi-v4\\default_ptr_flip.png",
+        "source": "D:\\android-studioWorkspace\\Week6HomeWork_lp\\pulltorefresh\\build\\intermediates\\bundles\\debug\\res\\drawable-xhdpi-v4\\default_ptr_flip.png"
+    }
+]

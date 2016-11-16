@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="D:\android-studioWorkspace\Week6HomeWork_lp\pulltorefresh\src\main\assets"/><source path="D:\android-studioWorkspace\Week6HomeWork_lp\pulltorefresh\build\generated\assets\shaders\release"/></dataSet><dataSet config="release"><source path="D:\android-studioWorkspace\Week6HomeWork_lp\pulltorefresh\src\release\assets"/></dataSet></merger>
